@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class A {
 
     public static void main(String[] args) throws FileNotFoundException {
-        ArrayList<String> input = getInput();
+        ArrayList<ArrayList<Object>> input = parseInput(getInput());
         System.out.println(solve(input));
         // solve(input);
     }
@@ -22,32 +22,42 @@ public class A {
         return output;
     }
 
-    private static int solve(ArrayList<String> input) {
-        int start = 0;
-        int end = 0;
-        String[] nums = new String[2];
-        char c = 'a';
-        String s = "";
+    private static ArrayList<ArrayList<Object>> parseInput(ArrayList<String> input) {
+        ArrayList<ArrayList<Object>> output = new ArrayList<>();
+        for (String s : input) {
+            ArrayList<Object> temp = new ArrayList<>();
+            String[] split = s.split(" ");
+            String[] nums = split[0].split("-");
+            temp.add(Integer.parseInt(nums[0]));
+            temp.add(Integer.parseInt(nums[1]));
+            temp.add(split[1].charAt(0));
+            temp.add(split[2]);
+            output.add(temp);
+        }
+        return output;
+    }
+
+    private static int solve(ArrayList<ArrayList<Object>> input) {
         int count = 0;
-        int tempCount = 0;
-        String[] temp = new String[3];
-        for (int i = 0; i < input.size(); i++) {
-            temp = input.get(i).split(" ");
-            nums = temp[0].split("-");
-            start = Integer.parseInt(nums[0]);
-            end = Integer.parseInt(nums[1]);
-            c = temp[1].charAt(0);
-            s = temp[2];
-            for (char d : s.toCharArray()) {
-                if (d == c) {
-                    tempCount++;
-                }
-            }
-            if (tempCount >= start && tempCount <= end) {
+        for (ArrayList<Object> list : input) {
+            int start = (int) list.get(0);
+            int end = (int) list.get(1);
+            char c = (char) list.get(2);
+            String s = (String) list.get(3);
+            if (isValidPassword(start, end, c, s)) {
                 count++;
             }
-            tempCount = 0;
         }
         return count;
+    }
+
+    private static boolean isValidPassword(int start, int end, char c, String s) {
+        int count = 0;
+        for (char d : s.toCharArray()) {
+            if (d == c) {
+                count++;
+            }
+        }
+        return count >= start && count <= end;
     }
 }
