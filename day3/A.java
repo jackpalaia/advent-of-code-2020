@@ -27,13 +27,24 @@ public class A {
     }
 
     private static int solve(ArrayList<String> input) {
+        int ans = 1;
+        ans *= getTrees(input, 1, 1);
+        ans *= getTrees(input, 3, 1);
+        ans *= getTrees(input, 5, 1);
+        ans *= getTrees(input, 7, 1);
+        ans *= getTrees(input, 1, 2);
+        return ans;
+    }
+
+    private static int getTrees(ArrayList<String> input, int right, int down) {
         int count = 0;
         int col = 0;
-        for (String s : input) {
+        for (int i = 0; i < input.size(); i += down) {
+            String s = input.get(i);
             if (s.charAt(col) == '#') {
                 count++;
             }
-            col = (col + 3) % s.length();
+            col = (col + right) % s.length();
         }
         return count;
     }
